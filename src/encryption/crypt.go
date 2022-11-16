@@ -20,7 +20,7 @@ func EncryptFile(pathname string) {
 	f, err := os.Create(file.Name() + ".glock")
 	panicOn(err)
 	defer f.Close()
-	buf := make([]byte, 1)
+	buf := make([]byte, 1024*1024)
 	for {
 		n, err := file.Read(buf)
 		if err != nil {
@@ -45,7 +45,7 @@ func DecryptFile(pathname string) {
 	f, err := os.Create(file.Name()[:len(file.Name())-6])
 	panicOn(err)
 	defer f.Close()
-	buf := make([]byte, 1)
+	buf := make([]byte, 1024*1024)
 	for {
 		n, err := file.Read(buf)
 		if err != nil {

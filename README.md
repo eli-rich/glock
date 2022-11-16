@@ -2,4 +2,16 @@
 
 Encryption/Decryption CLI
 
-**WARNING: DO NOT USE FOR AYTHING SERIOUS**
+Usage:
+
+```
+glock k {PASSWORD}
+```
+
+```
+glock e <glob>
+```
+
+```
+glock d <glob>
+```
