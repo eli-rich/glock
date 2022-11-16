@@ -1,6 +1,7 @@
 package key
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -29,6 +30,19 @@ func SetKey(key string) {
 	// write first 32 bytes of key to file
 	err = os.WriteFile(glockFile, []byte(key[:32]), 0600)
 	panicOn(err)
+}
+
+func GetKey() []byte {
+	// read key from file
+	// return key
+	_, err := os.Stat(glockFile)
+	if os.IsNotExist(err) {
+		fmt.Println("Key file does not exist")
+		os.Exit(1)
+	}
+	key, err := os.ReadFile(glockFile)
+	panicOn(err)
+	return key
 }
 
 func handleStatError(err error) bool {
