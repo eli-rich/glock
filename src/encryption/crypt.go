@@ -4,16 +4,13 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"os"
-
-	"github.com/eli-rich/glock/src/key"
 )
 
 // Encrypt a file using AES-256
 // S/O github copilot
-func EncryptFile(pathname string) {
+func EncryptFile(pathname string, k []byte) {
 	file, err := os.Open(pathname)
 	panicOn(err)
-	k := key.GetKey()
 	block, err := aes.NewCipher(k)
 	panicOn(err)
 	stream := cipher.NewCTR(block, k[:aes.BlockSize])
@@ -35,10 +32,9 @@ func EncryptFile(pathname string) {
 }
 
 // Decrypt a file using AES-256
-func DecryptFile(pathname string) {
+func DecryptFile(pathname string, k []byte) {
 	file, err := os.Open(pathname)
 	panicOn(err)
-	k := key.GetKey()
 	block, err := aes.NewCipher(k)
 	panicOn(err)
 	stream := cipher.NewCTR(block, k[:aes.BlockSize])

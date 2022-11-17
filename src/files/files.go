@@ -9,7 +9,7 @@ import (
 	"github.com/eli-rich/glock/src/encryption"
 )
 
-func Encrypt(glob string) {
+func Encrypt(glob string, k []byte) {
 	files, err := filepath.Glob(glob)
 	if err != nil {
 		fmt.Println("No files found")
@@ -21,14 +21,14 @@ func Encrypt(glob string) {
 			log.Fatalln("Could not stat file")
 		}
 		if stat.IsDir() {
-			encryptDir(file)
+			encryptDir(file, k)
 		} else {
-			encryption.EncryptFile(file)
+			encryption.EncryptFile(file, k)
 		}
 	}
 }
 
-func Decrypt(glob string) {
+func Decrypt(glob string, k []byte) {
 	file, err := filepath.Glob(glob)
 	if err != nil {
 		fmt.Println("No files found")
@@ -40,24 +40,24 @@ func Decrypt(glob string) {
 			log.Fatalln("Could not stat file")
 		}
 		if stat.IsDir() {
-			decryptDir(file)
+			decryptDir(file, k)
 		} else {
-			encryption.DecryptFile(file)
+			encryption.DecryptFile(file, k)
 		}
 	}
 }
 
-func decryptDir(dir string) {
+func decryptDir(dir string, k []byte) {
 	filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
 		if d.IsDir() {
 			return nil
 		}
-		encryption.DecryptFile(path)
+		encryption.DecryptFile(path, k)
 		return nil
 	})
 }
 
-func encryptDir(dir string) {
+func encryptDir(dir string, k []byte) {
 	filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -65,7 +65,7 @@ func encryptDir(dir string) {
 		if d.IsDir() {
 			return nil
 		}
-		encryption.EncryptFile(path)
+		encryption.EncryptFile(path, k)
 		return nil
 	})
 }
