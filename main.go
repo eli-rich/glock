@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -9,6 +8,7 @@ import (
 	"github.com/eli-rich/glock/src/encryption"
 	"github.com/eli-rich/glock/src/files"
 	"github.com/urfave/cli/v2"
+	"golang.org/x/term"
 )
 
 func main() {
@@ -42,12 +42,13 @@ func main() {
 }
 
 func prompt() string {
+	// get password silencing the input
 	fmt.Print("Enter password: ")
-	reader := bufio.NewReader(os.Stdin)
-	pass, err := reader.ReadString('\n')
+	bytePassword, err := term.ReadPassword(0)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
+	pass := string(bytePassword)
 	pass = fmt.Sprintf("%x", (encryption.Shasum(pass)))
 	return pass[:32]
 }
